@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html>
@@ -21,17 +22,17 @@
                         <li>
                             <select name="role">
                                 <option value="1"
-                                        <c:if test="${user.role == 1}">
+                                        <c:if test="${user.getRole().equals('system admin')}">
                                             selected
                                         </c:if>
                                         >system admin</option>
                                 <option value="2"
-                                        <c:if test="${user.role == 2}">
+                                        <c:if test="${user.getRole().equals('regular user')}">
                                             selected
                                         </c:if>
                                         >regular user</option>
                                 <option value="3"
-                                        <c:if test="${user.role == 3}">
+                                        <c:if test="${user.getRole().equals('company admin')}">
                                             selected
                                         </c:if>
                                         >company admin</option>
@@ -84,7 +85,17 @@
                             <span>${user.email}</span>
                             <span>${user.firstName}</span>
                             <span>${user.lastName}</span>
-                            <span>${roles.getRoleName(user.role)}</span>
+                            <span>
+                                <c:if test="${user.role.getRoleId()==1}">
+                                    system admin
+                                </c:if>
+                                <c:if test="${user.role.getRoleId()==2}">
+                                    regular user
+                                </c:if>
+                                <c:if test="${user.role.getRoleId()==3}">
+                                    company admin
+                                </c:if>
+                            </span>
                             <span>${user.active}</span>
                             <span>
                                 <form method="get">
@@ -113,7 +124,7 @@
                 </c:if>
             </div>
             <div class="right" id="editTable">
-                <h3>Edit Users</h3>
+                <h3>Edit User</h3>
                 <ul>
                     <form method="post">
                         <li><input type="text" name="update_email" value="${selectedUser.email}" placeholder="Email" readonly></li>
@@ -123,17 +134,17 @@
                         <li>
                             <select name="update_role">                    
                                 <option value="1"
-                                        <c:if test="${selectedUser.role == 1}">
+                                        <c:if test="${selectedUser.role.getRoleId()==1}">
                                             selected
                                         </c:if>
                                         >system admin</option>
                                 <option value="2"
-                                        <c:if test="${selectedUser.role == 2}">
+                                        <c:if test="${selectedUser.role.getRoleId()==2}">
                                             selected
                                         </c:if>
                                         >regular user</option>
                                 <option value="3"
-                                        <c:if test="${selectedUser.role == 3}">
+                                        <c:if test="${selectedUser.role.getRoleId()==3}">
                                             selected
                                         </c:if>
                                         >company admin</option>
@@ -150,7 +161,7 @@
                             <input class="white noBackground expand" type="submit" value="Save">
                         </li>
                     </form>
-                    <li class="greyBG center">
+                    <li class="darkBG center">
                         <a class="white btn" href="users">Cancel</a>
                     </li>
 

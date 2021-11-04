@@ -17,6 +17,7 @@ body {
 }
 
 h3 {
+    margin: 10px auto;
     text-align: center;
 }
 
@@ -91,16 +92,17 @@ label {
 }
 
 .greenBG {
-    background: #245d79;
+    background: #04AA6D;
     font-weight: bold;
 }
 
-.greyBG {
-    background: #999999;
+.darkBG {
+    background: #666666;
+    font-weight: bold;
 }
 
 .blueBG {
-    background: #245d79;
+    background: #0066cc;
     color: #ffffff;
     border: 1px solid #cccccc;
     border-radius: 3px;
@@ -108,10 +110,6 @@ label {
 
 .white{
     color: white;
-}
-
-.darkGrey{
-    color: darkslategrey;
 }
 
 .noBackground {

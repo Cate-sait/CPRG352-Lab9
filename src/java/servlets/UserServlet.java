@@ -20,9 +20,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import models.User;
-import services.RoleService;
-import services.UserService;
+import models.*;
+import services.*;
 
 /**
  *
@@ -36,15 +35,13 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserService us = new UserService();
-        RoleService rs = new RoleService();
-        RoleDB roleDB = new RoleDB();
         String action = request.getParameter("action");
 
         if (action == null) {//show all users
             session.setAttribute("editMode", false);
             try {
                 List<User> userList = us.getAll();
-                session.setAttribute("roles", roleDB);
+                session.setAttribute("Role", new Role());
                 session.setAttribute("userList", userList);
             } catch (Exception ex) {
                 Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -88,7 +85,9 @@ public class UserServlet extends HttpServlet {
             String lastName = request.getParameter("lastName");
             String password = request.getParameter("password");
             int role = Integer.parseInt(request.getParameter("role"));
-            User user = new User(email, active, firstName, lastName, password, role);
+            
+            User user = new User(email, active, firstName, lastName, password);
+            user.setRole(new Role(role));
 
             if (AllFieldsFilled(email, active, firstName, lastName, password, role)) {
                 try {
@@ -104,28 +103,29 @@ public class UserServlet extends HttpServlet {
             }
         } else if (action.equals("edit")) {
             session.setAttribute("editMode", false);
-            String Update_email = request.getParameter("update_email");
-            String Update_firstName = request.getParameter("update_firstName");
-            String Update_lastName = request.getParameter("update_lastName");
-            String Update_password = request.getParameter("update_password");
-            int Update_role = Integer.parseInt(request.getParameter("update_role"));
-            String Update_active_string = request.getParameter("update_active");
-            boolean Update_active = true;
-            if (Update_active_string == null) {
-                Update_active = false;
+            String update_email = request.getParameter("update_email");
+            String update_firstName = request.getParameter("update_firstName");
+            String update_lastName = request.getParameter("update_lastName");
+            String update_password = request.getParameter("update_password");
+            int update_role = Integer.parseInt(request.getParameter("update_role"));
+            String update_active_string = request.getParameter("update_active");
+            boolean update_active = true;
+            if (update_active_string == null) {
+                update_active = false;
             }
-            User Update_user = new User(Update_email, Update_active, Update_firstName, Update_lastName, Update_password, Update_role);
-
-            if (AllFieldsFilled(Update_email, Update_active, Update_firstName, Update_lastName, Update_password, Update_role)) {
+            User update_user = new User(update_email, update_active, update_firstName, update_lastName, update_password);
+            update_user.setRole(new Role(update_role));
+            
+            if (AllFieldsFilled(update_email, update_active, update_firstName, update_lastName, update_password, update_role)) {
                 try {
-                    us.update(Update_email, Update_active, Update_firstName, Update_lastName, Update_password, Update_role);
+                    us.update(update_email, update_active, update_firstName, update_lastName, update_password, update_role);
                 } catch (Exception ex) {
                     Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 response.sendRedirect("users");
                 return;
             } else {
-                request.setAttribute("selectedUser", Update_user);
+                request.setAttribute("selectedUser", update_user);
                 request.setAttribute("errorMessage_EditUser", true);
                 getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
                 return;

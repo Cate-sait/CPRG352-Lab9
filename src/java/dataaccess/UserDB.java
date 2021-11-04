@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import models.User;
+import models.*;
 
 public class UserDB {
      public List<User> getAll() throws Exception {
@@ -29,7 +29,8 @@ public class UserDB {
                 String lastname = rs.getString(4);
                 String password = rs.getString(5);
                 int role = rs.getInt(6);
-                User user = new User(email, active, firstname, lastname, password, role);
+                User user = new User(email, active, firstname, lastname, password);
+                user.setRole(new Role(role));
                 users.add(user);
             }
         } finally {
@@ -60,7 +61,8 @@ public class UserDB {
                 String lastname = rs.getString(4);
                 String password = rs.getString(5);
                 int role = rs.getInt(6);
-                user = new User(email, active, firstname, lastname, password, role);   
+                user = new User(email, active, firstname, lastname, password);
+                user.setRole(new Role(role));
             }
            
         } 
@@ -86,11 +88,11 @@ public class UserDB {
         try {
             ps = con.prepareStatement(sql);
             ps.setString(1, user.getEmail());
-            ps.setBoolean(2, user.isActive());
+            ps.setBoolean(2, user.getActive());
             ps.setString(3, user.getFirstName());
             ps.setString(4, user.getLastName());
             ps.setString(5, user.getPassword());
-            ps.setInt(6, user.getRole());
+            ps.setInt(6, user.getRole().getRoleId());
             ps.executeUpdate();
         } finally {
             DBUtil.closePreparedStatement(ps);
@@ -106,11 +108,11 @@ public class UserDB {
         
         try {
             ps = con.prepareStatement(sql);
-            ps.setBoolean(1, user.isActive());
+            ps.setBoolean(1, user.getActive());
             ps.setString(2, user.getFirstName());
             ps.setString(3, user.getLastName());
             ps.setString(4, user.getPassword());
-            ps.setInt(5, user.getRole());
+            ps.setInt(5, user.getRole().getRoleId());
             ps.setString(6, user.getEmail());
             ps.executeUpdate();
         } finally {
